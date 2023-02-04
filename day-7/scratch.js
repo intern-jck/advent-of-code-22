@@ -97,3 +97,76 @@ const sysOutput = inspect(sys, {
 
 console.log(sysOutput);
 
+
+
+
+// console.log('path', pathArray)
+// // touch(FileSystem, 'f', pathArray, 29116);
+// // touch(FileSystem, 'g', pathArray, 2557);
+// touch(FileSystem, 'h.lst', pathArray, 62596);
+// ls(sys, pathArray);
+
+// mkdir(sys, 'e', pathArray);
+// ls(sys, pathArray);
+
+// cd(pathArray, 'e');
+
+// console.log('path', pathArray)
+// ls(sys, pathArray);
+
+
+
+
+
+console.table(inputData)
+
+let cmd = '';
+
+while (inputData.length) {
+
+    const input = inputData.shift().split(' ');
+
+    if (input[0] === '$') {
+        cmd = input[1];
+    }
+
+    if (cmd === 'cd') {
+
+        if (input[2] !== '..') {
+            pathArray.push(input[2]);
+        } else {
+            pathArray.pop();
+        }
+
+        // console.log(cmd, input);
+        // console.log('path', pathArray)
+    } else if (cmd === 'ls') {
+
+        let dirName = '';
+        let fileSize = 0;
+
+        const currentDir = pathArray[pathArray.length - 1];
+
+        if (input[0] === 'dir') {
+
+            dirName = input[1];
+
+            if (!sizeTable[dirName]) {
+                sizeTable[dirName] = 0;
+            }
+
+        } else {
+            fileSize = parseInt(input[0]);
+            // if (sizeTable[currentDir]) {
+            //   sizeTable[currentDir] = sizeTable[currentDir] + fileSize;
+            // }
+            sizeTable[currentDir] = sizeTable[currentDir] + fileSize || fileSize;
+        }
+
+        // console.log(cmd, input);
+    }
+
+
+}
+
+console.log(sizeTable)
