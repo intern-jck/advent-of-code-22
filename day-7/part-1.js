@@ -20,7 +20,9 @@ const myfs = require('./sys.js');
     - k (fie, size=7214296)
 */
 
-const rootPath = ['/'];
+let dirCount = 0;
+
+const root = '/';
 const curPath = [];
 // Create empty file system with '/' as default root.
 const sys = {
@@ -56,23 +58,26 @@ for (let i in inputData) {
     if (input[0] === 'dir') {
       const dirName = input[1];
       myfs.mkdir(sys, dirName, curPath);
+      dirCount += 1;
     } else if (input[0] !== '$') {
       const fileName = input[1];
       const fileSize = input[0];
       myfs.touch(sys, fileName, curPath, parseInt(fileSize));
-      // myfs.ls(sys, rootPath);
     }
 
   }
 
 }
 
-console.log('end')
+console.log('end', dirCount)
 myfs.cd(curPath, '/');
 // myfs.ls(sys, curPath);
-let spaceToFree = 0;
-spaceToFree = myfs.getSizeToAllocate(sys);
+// spaceToFree = myfs.getSizeToAllocate(sys);
 
 // console.log('size', spaceToFree)
 
-console.log('min size', myfs.getMinDirSizesToDelete(sys))
+const amtNeeded = 70000000 - sys[root].size;
+console.log(amtNeeded)
+
+const minDir = myfs.getDirsToDelete(sys, amtNeeded, [])
+console.table(minDir)

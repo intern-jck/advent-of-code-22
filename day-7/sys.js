@@ -148,31 +148,26 @@ function getSizeToAllocate(dir) {
 }
 
 
-function getMinDirSizesToDelete(dir, arr) {
-    // console.log(dir)
-    // return;
-    const keys = Object.keys(dir);
+function getDirsToDelete(dir, minSize) {
 
-    // let minSize = Infinity;
-    // let minSize = dir[keys[0]].size ? dir[keys[0]].size : Infinity;
-
-    console.log('first min', minSize)
-
-    for (let key of keys) {
-
-        const dirSize = dir[key].size;
-        // console.log(typeof dirSize)
-        if (dirSize >= 8381165 && dirSize <= minSize) {
-            console.log('new min', dirSize)
-            minSize = dirSize;
+    let arr = [];
+    function findDir(dir) {
+        for (let key in dir) {
+            if (typeof dir[key] === 'object') {
+                // console.log(key)
+                // const dirSize = dir[key].size;
+                arr.push(dir[key].size)
+                getDirsToDelete(dir[key], minSize);
+            }
         }
-
-        if (typeof dir[key] === 'object') {
-            minSize = getMinDirSizesToDelete(dir[key]);
-        }
+        // return;
     }
 
-    return minSize;
+    findDir(dir);
+
+    arr.sort((a, b) => (b - a));
+    // console.log(arr)
+    return arr;
 }
 
 
@@ -183,5 +178,5 @@ module.exports = {
     // getDirSize,
     touch,
     getSizeToAllocate,
-    getMinDirSizesToDelete
+    getDirsToDelete
 }
