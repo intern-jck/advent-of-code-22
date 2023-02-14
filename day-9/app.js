@@ -1,5 +1,5 @@
 const fs = require('fs');
-const inputData = fs.readFileSync('test.txt', 'utf-8').split('\n');
+const inputData = fs.readFileSync('input.txt', 'utf-8').split('\n');
 
 class Knot {
 
@@ -8,7 +8,7 @@ class Knot {
         this.y = 0;
         this.path = [];
         this.pathLength = 0;
-        this.visited = new Set();
+        this.visited = {};
     };
 
     getCurrentPosition() {
@@ -43,13 +43,14 @@ class Knot {
                 this.y--;
                 break;
         }
-
+        this.markVisited(this.x, this.y);
         this.path.push([this.x, this.y]);
     };
 
     moveTo(x, y) {
         this.x = x;
         this.y = y;
+        this.markVisited(this.x, this.y);
         this.path.push([this.x, this.y]);
     };
 
@@ -60,7 +61,17 @@ class Knot {
         return distance;
     };
 
+    markVisited(x, y) {
+        const posKey = `${x}-${y}`;
 
+        if (this.visited[posKey]) {
+            this.visited[posKey]++;;
+            return;
+        }
+
+        this.visited[posKey] = 1;
+        return;
+    }
 
 };
 
@@ -91,7 +102,7 @@ for (let i = 0; i < inputData.length; i++) {
         }
 
         const tailCurrent = tail.getCurrentPosition();
-        console.log(headCurrent, tailCurrent);
+        // console.log(headCurrent, tailCurrent);
 
     }
 
@@ -100,5 +111,6 @@ for (let i = 0; i < inputData.length; i++) {
 // console.table(tail.getPath());
 // console.table(head.getPath());
 
-console.log(tail.getPath().length, head.getPath().length);
+// console.log(tail.visited, head.visited);
 
+console.log(Object.keys(tail.visited).length);
