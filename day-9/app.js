@@ -1,85 +1,18 @@
 const fs = require('fs');
-const inputData = fs.readFileSync('input.txt', 'utf-8').split('\n');
-
-class Knot {
-
-    constructor() {
-        this.x = 0;
-        this.y = 0;
-        this.path = [];
-        this.pathLength = 0;
-        this.visited = {};
-    };
-
-    getCurrentPosition() {
-        const pos = this.path.slice().pop();
-        if (pos) {
-            return pos;
-        }
-        return [this.x, this.y];
-    };
-
-    getPreviousPosition() {
-        const pos = this.path.slice()[this.path.length - 2];
-        return pos;
-    };
-
-    getPath() {
-        return this.path.slice();
-    };
-
-    move(dir) {
-        switch (dir) {
-            case 'L':
-                this.x--;
-                break;
-            case 'R':
-                this.x++;
-                break;
-            case 'U':
-                this.y++;
-                break;
-            case 'D':
-                this.y--;
-                break;
-        }
-        this.markVisited(this.x, this.y);
-        this.path.push([this.x, this.y]);
-    };
-
-    moveTo(x, y) {
-        this.x = x;
-        this.y = y;
-        this.markVisited(this.x, this.y);
-        this.path.push([this.x, this.y]);
-    };
-
-    getDistance(knot) {
-        const xDistance = (knot.x - this.x);
-        const yDistance = (knot.y - this.y);
-        const distance = Math.sqrt(xDistance ** 2 + yDistance ** 2);
-        return distance;
-    };
-
-    markVisited(x, y) {
-        const posKey = `${x}-${y}`;
-
-        if (this.visited[posKey]) {
-            this.visited[posKey]++;;
-            return;
-        }
-
-        this.visited[posKey] = 1;
-        return;
-    }
-
-};
-
-const head = new Knot();
-const tail = new Knot();
+const inputData = fs.readFileSync('test.txt', 'utf-8').split('\n');
+const { Knot } = require('./Knot.js');
 
 const maxDistance = Math.sqrt(2);
 
+const numKnots = 2;
+const rope = [];
+
+for (let i = 0; i < numKnots; i++) {
+    const knot = new Knot(i.toString());
+    rope.push(knot);
+}
+
+// Part 1
 // Move knots based on input
 for (let i = 0; i < inputData.length; i++) {
 
@@ -87,30 +20,42 @@ for (let i = 0; i < inputData.length; i++) {
     const input = inputData[i].split(' ');
     const direction = input[0];
     const steps = input[1];
-
+    console.log(direction, steps);
+    // Part 1
     // Move head one step for each number of steps
     for (let i = 0; i < steps; i++) {
 
+        // Iterate over an array of knots
+        const head = rope[0];
         head.move(direction);
+        console.log('head @', head.getPosition());
 
-        const headCurrent = head.getCurrentPosition();
-        const headPrevious = head.getPreviousPosition();
-        const headDistance = head.getDistance(tail);
+        for (let i = 1; i < rope.length; i++) {
+            const knot = rope[i];
+            const prevKnot = rope[i - 1];
 
-        if (headDistance > maxDistance) {
-            tail.moveTo(headPrevious[0], headPrevious[1])
+            // for (let i of rope) {
+            //     console.log(i.name, i.getPosition())
+            // }
+
+            const knotDistance = knot.getDistance(prevKnot);
+            console.log(knotDistance);
+
+            if (knotDistance > maxDistance) {
+                console.log('move knot', knot.name)
+                const newLoc = prevKnot.getPath()[1];
+                console.log('move to :', newLoc);
+                knot.moveTo(newLoc);
+            }
+            console.log('knot @', knot.getPosition());
+
+            console.log('\n');
         }
-
-        const tailCurrent = tail.getCurrentPosition();
-        // console.log(headCurrent, tailCurrent);
-
     }
-
 }
 
-// console.table(tail.getPath());
-// console.table(head.getPath());
+// Log number of steps tail has made.
+// console.log(Object.keys(tail.visited).length, tail.getPath().length);
+const tail = rope[rope.length - 1];
 
-// console.log(tail.visited, head.visited);
-
-console.log(Object.keys(tail.visited).length);
+console.log(tail.getPath().length);
