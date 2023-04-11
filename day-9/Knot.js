@@ -77,5 +77,4 @@ class Knot {
 
 };
 
-
 module.exports = { Knot };

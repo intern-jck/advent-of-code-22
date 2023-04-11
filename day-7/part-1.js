@@ -1,6 +1,6 @@
 const fs = require('fs');
 const inputData = fs.readFileSync('input.txt', 'UTF-8').split('\n');
-const myfs = require('./sys.js');
+const myfs = require('./scratch/sys.js');
 
 /*
 - / (dir)

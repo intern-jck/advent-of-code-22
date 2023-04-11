@@ -1,5 +1,3 @@
-
-
 // Rules
 // For each key-value pair in FileSystem,
 // if typeof value === object, value is a directory
@@ -147,7 +145,6 @@ function getSizeToAllocate(dir) {
     return size;
 }
 
-
 function getDirsToDelete(dir, minSize) {
 
     let arr = [];
@@ -169,7 +166,6 @@ function getDirsToDelete(dir, minSize) {
     // console.log(arr)
     return arr;
 }
-
 
 module.exports = {
     cd,
